@@ -765,13 +765,13 @@ if (!skip_debrief){
 					var data = jsPsych.data.dataAsJSON();
 					resolve(data);
 				})
-
+				console.log('qsdfqsdfqsdf')
 				promise.then(function(data) {
 
 
 					$.ajax({
 						type: "POST",
-						url: '/save',
+						url: '/',
 						data: { "data": data },
 						success: function(){ document.location = "/" },
 						dataType: "application/json",
