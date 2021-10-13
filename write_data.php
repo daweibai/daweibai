@@ -1,6 +1,6 @@
 <?php
 // first define the folder in which the save folder is expected to be found
-$saveroot = "/var/www/data.save";
+$saveroot = "/";
 
 // get the name of the directory we're in
 // this should be the root of the experiment directory
