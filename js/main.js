@@ -756,7 +756,6 @@ if (!skip_debrief){
 };
 
 /*Run the experiment */
-if (!show_data_mid){
 	jsPsych.init({
 		timeline: timeline,
 		on_finish: function(data){
@@ -794,4 +793,4 @@ if (!show_data_mid){
 		
 		}
 	);
-}
+
