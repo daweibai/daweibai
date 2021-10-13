@@ -761,6 +761,39 @@ if (!show_data_mid){
 		timeline: timeline,
 		on_finish: function() { 
 			// jsPsych.data.displayData(''); 
+			
+			function(data){
+
+				// Serialize the data
+				var promise = new Promise(function(resolve, reject) {
+					var data = jsPsych.data.dataAsJSON();
+					resolve(data);
+				})
+
+				promise.then(function(data) {
+
+
+					$.ajax({
+						type: "POST",
+						url: '/save',
+						data: { "data": data },
+						success: function(){ document.location = "/" },
+						dataType: "application/json",
+
+						// Endpoint not running, local save
+						error: function(err) {
+
+							if (err.status == 200){
+								document.location = "/";
+							} else {
+								// If error, assue local save
+								jsPsych.data.localSave('digit-span_results.csv', 'csv');
+							}
+						}
+					});
+				})
+			}
+			
 		}
 		}
 	);
