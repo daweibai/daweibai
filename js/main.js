@@ -759,10 +759,7 @@ if (!skip_debrief){
 if (!show_data_mid){
 	jsPsych.init({
 		timeline: timeline,
-		on_finish: function() { 
-			// jsPsych.data.displayData(''); 
-			
-			function(data){
+		on_finish: function(data){
 
 				// Serialize the data
 				var promise = new Promise(function(resolve, reject) {
@@ -794,7 +791,7 @@ if (!show_data_mid){
 				})
 			}
 			
-		}
+		
 		}
 	);
 }
