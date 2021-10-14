@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="jspsych-6.0.5/jspsych.js"></script>
+        <script src="jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
+        <link rel="stylesheet" href="jspsych-6.0.5/css/jspsych.css"></link>
+        <script src="js/io.js"></script>  
+
+    </head>
+    <style>
+        #canvas {
+            z-index: 1; 
+            position:absolute; 
+            left:50%; 
+            top:50%;
+            margin-left:-300px;
+            margin-top:-300px;
+            border: 2px solid black;
+        }
+        #canvas2 {
+            z-index: 2; 
+            position:absolute; 
+            left:50%; 
+            top:50%;
+            margin-left:-300px;
+            margin-top:-300px;
+            border: 2px solid black;
+        }
+
+
+    </style>
+    <body>
+    <script>
+
+
+
+const r_ball 		 = 75,
+	ball_color	 = "#2185C5",
+	pi 			 = Math.PI
+
+
+	canvas_width = 600,
+	canvas_height = 600;
+
+// resize canvas
+function resize() {
+	canvas.width = canvas_width;
+	canvas.height = canvas_height;
+}
+
+
+function drawCircle(c, drawX, drawY, width) {
+	c.beginPath();
+	c.ellipse(drawX, drawY, width, r_ball, 0, 0, 2 * Math.PI);
+	c.stroke();
+	c.closePath();
+}
+
+display = function() {    
+
+	var canvas  = document.getElementById('canvas');
+	var c 		= canvas.getContext('2d');
+
+	resize()
+
+	function Ball() {
+		
+		this.width = r_ball
+		this.angle = 0
+		this.vAngle = 2 * pi/100
+
+		this.x = 150
+		this.y = 200
+
+		this.update = function() {
+			c.fillStyle = 'white'
+			c.fillRect(0, 0, canvas_width, canvas_height)
+
+
+			this.angle += this.vAngle
+			this.width = Math.abs(Math.sin(this.angle) * r_ball)
+			this.width2 = Math.abs(Math.cos(this.angle) * r_ball)
+			
+			if (this.width< 0.0001) {
+				this.width = 0.0001
+			}
+			
+			if (this.width2< 0.0001) {
+				this.width2 = 0.0001
+			}
+			this.widthNoAbs = Math.sin(this.angle) * r_ball
+
+            this.drawX = this.x;
+            this.drawY = this.y;
+			
+			this.draw();
+		};
+		this.draw = function() {
+			c.lineWidth = 15;
+			drawCircle(c, this.drawX, this.drawY-100, this.width)
+			drawCircle(c, this.drawX+200, this.drawY-100, this.width)
+
+			// c.fillRect(this.drawX + (this.widthNoAbs-1)*0.6, this.drawY -100-40 -1,2,2)
+			// c.fillStyle = 'white'
+
+			// 2nd circle
+			drawCircle(c, this.drawX, this.drawY+100, this.width)
+			drawCircle(c, this.drawX+75, this.drawY+100, this.width)
+			
+			
+			// right middle
+			// drawCircle(c, this.drawX+300, this.drawY+100, this.width)
+			
+			// c.strokeStyle = 'grey';
+			// drawCircle(c, this.drawX+350, this.drawY+100, this.width)
+			
+			// c.strokeStyle = 'black';
+
+			// 3rd circle - left
+			c.beginPath();
+			c.ellipse(this.drawX, this.drawY+300, this.width, r_ball, 0, -0.25* Math.PI, 0.25 * Math.PI);
+			c.stroke();
+			c.closePath();
+			
+			c.beginPath();
+			c.ellipse(this.drawX, this.drawY+300, this.width, r_ball, 0, 0.42 * Math.PI, 0.58 * Math.PI);
+			c.stroke();
+			c.closePath();
+			
+			c.beginPath();
+			c.ellipse(this.drawX, this.drawY+300, this.width, r_ball, 0, 0.75 * Math.PI, 1.25 * Math.PI);
+			c.stroke();
+			c.closePath();
+			
+			c.beginPath();
+			c.ellipse(this.drawX, this.drawY+300, this.width, r_ball, 0, 1.42 * Math.PI, 1.58 * Math.PI);
+			c.stroke();
+			c.closePath();
+
+			// 3rd circle - right
+			c.beginPath();
+			c.ellipse(this.drawX+75, this.drawY+300, this.width, r_ball, 0, -0.25* Math.PI, 0.25 * Math.PI);
+			c.stroke();
+			c.closePath();
+			
+			c.beginPath();
+			c.ellipse(this.drawX+75, this.drawY+300, this.width, r_ball, 0, 0.42 * Math.PI, 0.58 * Math.PI);
+			c.stroke();
+			c.closePath();
+			
+			c.beginPath();
+			c.ellipse(this.drawX+75, this.drawY+300, this.width, r_ball, 0, 0.75 * Math.PI, 1.25 * Math.PI);
+			c.stroke();
+			c.closePath();
+			
+			c.beginPath();
+			c.ellipse(this.drawX+75, this.drawY+300, this.width, r_ball, 0, 1.42 * Math.PI, 1.58 * Math.PI);
+			c.stroke();
+			c.closePath();
+
+
+			// // fourth pair
+			// c.beginPath();
+			// c.ellipse(this.drawX+300, this.drawY+100, this.width2, r_ball, 0, 0, 2 * Math.PI);
+			// c.lineWidth = 10;
+			// c.stroke();
+			// c.closePath();
+
+			// c.beginPath();
+			// c.ellipse(this.drawX+300, this.drawY+150, this.width, r_ball, 0, 0, 2 * Math.PI);
+			// c.lineWidth = 10;
+			// c.stroke();
+			// c.closePath();
+			
+			// // fifth
+			// c.beginPath();
+			// c.ellipse(this.drawX+300, this.drawY-100, this.width, r_ball, 0, 0, 2 * Math.PI);
+			// c.lineWidth = 10;
+			// c.stroke();
+			// c.closePath();
+			
+			// c.beginPath();
+			// c.ellipse(this.drawX+380, this.drawY-100, this.width, r_ball, 0, 0, 2 * Math.PI);
+			// c.lineWidth = 10;
+			// c.stroke();
+			// c.closePath();
+			
+			// c.beginPath();
+			// c.ellipse(this.drawX+340, this.drawY-50, this.width, r_ball, 0, 0, 2 * Math.PI);
+			// c.lineWidth = 10;
+			// c.stroke();
+			// c.closePath();
+			
+			// // sixth pair
+			// c.beginPath();
+			// c.ellipse(this.drawX + 300 - this.widthNoAbs * 1.2, this.drawY+300, r_ball, r_ball, 0, 0, 2 * Math.PI);
+			// c.lineWidth = 10;
+			// c.stroke();
+			// c.closePath();
+
+			// c.beginPath();
+			// c.ellipse(this.drawX + 300 + this.widthNoAbs * 1.2, this.drawY+300, r_ball, r_ball, 0, 0, 2 * Math.PI);
+			// c.lineWidth = 10;
+			// c.stroke();
+			// c.closePath();
+
+		};
+	}
+	
+	var ballArray = [];
+	
+	function init() {
+		ballArray = [];
+
+		ballArray.push(new Ball());
+		
+	}
+	
+	// Animation Loop
+	function animate() {
+		stopID = window.requestAnimationFrame(animate);
+
+		c.clearRect(0, 0, canvas.width, canvas.height);
+		
+		for (let i = 0; i < ballArray.length; i++) {
+			ballArray[i].update();
+		}
+	}
+	
+	init();
+	
+	animate();
+}
+
+
+
+var training_trial = {       
+	type:       'html-keyboard-response',     
+	stimulus: 	 '<canvas id="canvas"></canvas>',
+	choices: jsPsych.NO_KEYS,
+	on_load: function() {
+		display()
+	},
+}
+
+
+var timeline = []
+
+
+timeline.push(training_trial)
+
+
+
+jsPsych.init({      
+	timeline: timeline,        
+});
+
+        </script>  
+
+    </body>   
+</html>
