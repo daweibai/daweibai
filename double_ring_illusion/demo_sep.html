@@ -33,6 +33,7 @@
     <script>
 
 
+var die
 
 const r_ring 		 = 50,
 	pi 			 = Math.PI
@@ -89,9 +90,27 @@ display = function() {
 			this.draw();
 		};
 		this.draw = function() {
-			c.lineWidth = 10;
-			drawCircle(c, canvas_width/2 -75, canvas_height/2, this.width)
-			drawCircle(c, canvas_width/2 +75, canvas_height/2, this.width)
+
+			t1 = performance.now()
+
+			if (t1 - t0 < 1000) {
+				c.fillStyle = 'black'
+				for (column = 0; column <= 50; column++ ) {
+					for (row = 0; row <= 50; row++ ) {
+						die = Math.random()
+						if (die < 0.5) {
+							c.fillRect((canvas_width/50) * column, (canvas_height/50)*row, canvas_width/50, canvas_height/50)
+
+						}
+					}
+				}
+			} else {
+
+				c.lineWidth = 10;
+				drawCircle(c, canvas_width/2 -75, canvas_height/2, this.width)
+				drawCircle(c, canvas_width/2 +75, canvas_height/2, this.width)
+			}
+
 		};
 	}
 	
@@ -101,7 +120,7 @@ display = function() {
 		ballArray = [];
 
 		ballArray.push(new Ball());
-		
+		t0 = performance.now()
 	}
 	
 	// Animation Loop
