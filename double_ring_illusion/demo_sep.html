@@ -35,7 +35,6 @@
 
 
 const r_ring 		 = 50,
-	ball_color	 = "#2185C5",
 	pi 			 = Math.PI
 
 
@@ -69,9 +68,6 @@ display = function() {
 		this.angle = 0
 		this.vAngle = 2 * pi/100
 
-		this.x = 150
-		this.y = 200
-
 		this.update = function() {
 			c.fillStyle = 'white'
 			c.fillRect(0, 0, canvas_width, canvas_height)
@@ -90,46 +86,12 @@ display = function() {
 			}
 			this.widthNoAbs = Math.sin(this.angle) * r_ring
 
-            this.drawX = this.x;
-            this.drawY = this.y;
-			
 			this.draw();
 		};
 		this.draw = function() {
 			c.lineWidth = 10;
-			drawCircle(c, this.drawX, this.drawY-100, this.width)
-			drawCircle(c, this.drawX+200, this.drawY-100, this.width)
-
-			// 2nd circle
-			drawCircle(c, this.drawX, this.drawY+100, this.width)
-			drawCircle(c, this.drawX+50, this.drawY+100, this.width)
-			
-			
-			// 3rd circle - left
-			
-			drawCircle(c, this.drawX, this.drawY+300, this.width)
-
-			// 3rd circle - right
-			c.beginPath();
-			c.ellipse(this.drawX+50, this.drawY+300, this.width, r_ring, 0, -0.25* Math.PI, 0.25 * Math.PI);
-			c.stroke();
-			c.closePath();
-			
-			c.beginPath();
-			c.ellipse(this.drawX+50, this.drawY+300, this.width, r_ring, 0, 0.42 * Math.PI, 0.58 * Math.PI);
-			c.stroke();
-			c.closePath();
-			
-			c.beginPath();
-			c.ellipse(this.drawX+50, this.drawY+300, this.width, r_ring, 0, 0.75 * Math.PI, 1.25 * Math.PI);
-			c.stroke();
-			c.closePath();
-			
-			c.beginPath();
-			c.ellipse(this.drawX+50, this.drawY+300, this.width, r_ring, 0, 1.42 * Math.PI, 1.58 * Math.PI);
-			c.stroke();
-			c.closePath();
-
+			drawCircle(c, canvas_width/2 -75, canvas_height/2, this.width)
+			drawCircle(c, canvas_width/2 +75, canvas_height/2, this.width)
 		};
 	}
 	
@@ -162,5 +124,10 @@ display = function() {
 display()
 
         </script>  
+		<p>Separate</p>
+		<p><a href= "demo_overlap.html">Overlapped</a></p>
+		<p><a href= "demo_gapped.html">Gapped</a></p>
+
+
     </body>   
 </html>
