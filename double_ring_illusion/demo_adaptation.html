@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<title>Double Ring Illusion Demo</title>
+
+    </head>
+    <style>
+        #canvas {
+            z-index: 2; 
+            position:absolute; 
+            left:50%; 
+            top:50%;
+            margin-left:-300px;
+            margin-top:-300px;
+            border: 2px solid black;
+        }
+        #canvas2 {
+            z-index: 1; 
+            position:absolute; 
+            left:50%; 
+            top:50%;
+            margin-left:-300px;
+            margin-top:-300px;
+            border: 2px solid black;
+        }
+
+
+    </style>
+    <body>
+		
+		<canvas id="canvas"></canvas>
+		<canvas id="canvas2"></canvas>
+
+    <script>
+
+
+var die
+var imageCounter = 1
+var ringCounter = 1
+
+const r_ring 		 = 50,
+	pi 			 = Math.PI
+
+
+	canvas_width = 600,
+	canvas_height = 600;
+	leftToRight = 1
+
+// resize canvas
+function resize() {
+	canvas.width = canvas_width;
+	canvas.height = canvas_height;
+	canvas2.width = canvas_width;
+	canvas2.height = canvas_height;
+
+}
+
+
+function drawCircle(c, drawX, drawY, width) {
+	c.beginPath();
+	c.ellipse(drawX, drawY, width, r_ring, 0, 0, 2 * Math.PI);
+	c.stroke();
+	c.closePath();
+}
+
+display = function() {    
+
+	var canvas  = document.getElementById('canvas');
+	var c 		= canvas.getContext('2d');
+	var canvas2  = document.getElementById('canvas2');
+	var c2 		= canvas2.getContext('2d');
+
+	resize()
+
+
+
+	function Ball() {
+		
+		this.width = r_ring
+		this.angle = 0
+		this.vAngle = 2 * pi/100
+
+
+		this.update = function() {
+
+
+			// c.fillStyle = 'white'
+			// c.fillRect(0, 0, canvas_width, canvas_height)
+
+
+			this.angle = ringCounter * this.vAngle
+
+
+			this.width = Math.abs(Math.cos(this.angle) * r_ring)
+			
+			if (this.width< 0.0001) {
+				this.width = 0.0001
+			}
+			
+			if (this.width2< 0.0001) {
+				this.width2 = 0.0001
+			}
+			this.widthNoAbs = Math.sin(this.angle) * r_ring
+
+			this.draw();
+		};
+		this.draw = function() {
+
+			c.lineWidth = 10;
+			t1 = performance.now()
+			ringCounter += 1
+			if (t1 - t0 < 10000) {
+
+				if (imageCounter <= 49) {
+
+					let img = new Image();  
+					img.onload = function() {
+						c2.drawImage(img, 203, 213, 195, 174);
+						// c2.drawImage(img, 403, 213, 195, 174);
+					}
+
+					if (leftToRight==1) {
+						// img.src = 'images/singlering00' + (imageCounter) +'.jpg'
+						img.src = 'images/overlap00' + (imageCounter) +'.jpg'
+					} else {
+						// img.src = 'images/singlering00' + (51-imageCounter) +'.jpg'
+						img.src = 'images/overlap00' + (51-imageCounter) +'.jpg'
+
+					}
+					// console.log(img.src)
+					imageCounter += 1
+				} else {
+					imageCounter = 1
+					leftToRight = leftToRight * (-1)
+
+				}
+			// } else {
+			// if (t1 - t0 < 1000) {
+			// 	c.fillStyle = 'black'
+			// 	for (column = 0; column <= 50; column++ ) {
+			// 		for (row = 0; row <= 50; row++ ) {
+			// 			die = Math.random()
+			// 			if (die < 0.5) {
+			// 				c.fillRect((canvas_width/50) * column, (canvas_height/50)*row, canvas_width/50, canvas_height/50)
+
+			// 			}
+			// 		}
+			// 	}
+			} else {
+				c2.clearRect(0, 0, canvas.width, canvas.height);
+				drawCircle(c, canvas_width/2-25, canvas_height/2, this.width)
+				drawCircle(c, canvas_width/2+25, canvas_height/2, this.width)
+				// drawCircle(c, canvas_width/2+200, canvas_height/2, this.width)
+			}
+
+			// fixation cross
+			c.beginPath();
+			c.moveTo(canvas.width/2-20,100);
+			c.lineTo(canvas.width/2+20, 100);
+			c.stroke();
+			c.beginPath();
+			c.moveTo(canvas.width/2,100-20);
+			c.lineTo(canvas.width/2,100+20);
+			c.stroke();
+		};
+	}
+
+
+	var ballArray = [];
+	
+	function init() {
+		ballArray = [];
+
+		ballArray.push(new Ball());
+		t0 = performance.now()
+	}
+	
+	// Animation Loop
+	function animate() {
+		stopID = window.requestAnimationFrame(animate);
+
+		c.clearRect(0, 0, canvas.width, canvas.height);
+		for (let i = 0; i < ballArray.length; i++) {
+			ballArray[i].update();
+		}
+
+	}
+	
+	init();
+	
+	animate();
+
+
+
+}
+
+
+display()
+
+        </script>  
+		<!-- <p>Separated</p>
+		<p><a href= "demo_overlap.html">Overlapped</a></p>
+		<p><a href= "demo_gapped.html">Gapped</a></p> -->
+
+
+    </body>   
+</html>
