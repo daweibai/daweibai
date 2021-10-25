@@ -63,6 +63,23 @@ function drawCircle(c, drawX, drawY, width) {
 	c.closePath();
 }
 
+function show180(img) {
+	if (leftToRight==1) {
+		// img.src = 'images/singlering00' + (imageCounter) +'.jpg'
+		img.src = 'images/overlap00' + (imageCounter) +'.jpg'
+	} else {
+		// img.src = 'images/singlering00' + (51-imageCounter) +'.jpg'
+		img.src = 'images/overlap00' + (51-imageCounter) +'.jpg'
+
+	}
+}
+
+function show360(img) {
+		// img.src = 'images/singlering00' + (imageCounter) +'.jpg'
+		img.src = 'images/overlap00' + (imageCounter) +'.jpg'
+
+}
+
 display = function() {    
 
 	var canvas  = document.getElementById('canvas');
@@ -109,6 +126,8 @@ display = function() {
 			c.lineWidth = 10;
 			t1 = performance.now()
 			ringCounter += 1
+			
+			// adaptation phase 
 			if (t1 - t0 < 10000) {
 
 				if (imageCounter <= 49) {
@@ -119,15 +138,9 @@ display = function() {
 						// c2.drawImage(img, 403, 213, 195, 174);
 					}
 
-					if (leftToRight==1) {
-						// img.src = 'images/singlering00' + (imageCounter) +'.jpg'
-						img.src = 'images/overlap00' + (imageCounter) +'.jpg'
-					} else {
-						// img.src = 'images/singlering00' + (51-imageCounter) +'.jpg'
-						img.src = 'images/overlap00' + (51-imageCounter) +'.jpg'
+					// show180(img)
+					show360(img)
 
-					}
-					// console.log(img.src)
 					imageCounter += 1
 				} else {
 					imageCounter = 1
@@ -147,6 +160,7 @@ display = function() {
 			// 		}
 			// 	}
 			} else {
+			// post-adaptation
 				c2.clearRect(0, 0, canvas.width, canvas.height);
 				drawCircle(c, canvas_width/2-25, canvas_height/2, this.width)
 				drawCircle(c, canvas_width/2+25, canvas_height/2, this.width)

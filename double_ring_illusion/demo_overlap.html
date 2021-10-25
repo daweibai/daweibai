@@ -108,6 +108,13 @@ display = function() {
 				// 2nd circle
 				drawCircle(c, canvas_width/2-25, canvas_height/2, this.width)
 				drawCircle(c, canvas_width/2+25, canvas_height/2, this.width)
+
+				// text
+				c.font = '17px serif';
+				c.fillStyle = "black";
+				c.textAlign = "center"
+				c.fillText('Please attend globally to the scene', canvas_width/2, 70)
+				c.fillText('(Instead of focusing on/tracking a specific spot on the rings)', canvas_width/2, 95)
 			}
 			
 		};

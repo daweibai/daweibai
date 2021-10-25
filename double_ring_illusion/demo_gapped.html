@@ -130,6 +130,13 @@ display = function() {
 				c.ellipse(canvas_width/2+25, canvas_height/2, this.width, r_ring, 0, 1.42 * Math.PI, 1.58 * Math.PI);
 				c.stroke();
 				c.closePath();
+
+				// text
+				c.font = '17px serif';
+				c.fillStyle = "black";
+				c.textAlign = "center"
+				c.fillText('Please attend globally to the scene', canvas_width/2, 70)
+				c.fillText('(Instead of focusing on/tracking a specific spot on the rings)', canvas_width/2, 95)
 			}
 		};
 	}

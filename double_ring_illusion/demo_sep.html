@@ -109,6 +109,13 @@ display = function() {
 				c.lineWidth = 10;
 				drawCircle(c, canvas_width/2 -75, canvas_height/2, this.width)
 				drawCircle(c, canvas_width/2 +75, canvas_height/2, this.width)
+				c.font = '17px serif';
+
+				// text
+				c.fillStyle = "black";
+				c.textAlign = "center"
+				c.fillText('Please attend globally to the scene', canvas_width/2, 70)
+				c.fillText('(Instead of focusing on/tracking a specific spot on the rings)', canvas_width/2, 95)
 			}
 
 		};
@@ -146,7 +153,8 @@ display()
 		<p>Separated</p>
 		<p><a href= "demo_overlap.html">Overlapped</a></p>
 		<p><a href= "demo_gapped.html">Gapped</a></p>
-
+		<!-- <p style = "position: relative; left: 400px; width: 150px; margin: 0 auto; ">Please attend <i>globally</i> to the scene (instead of focusing on/tracking a specific spot on the rings).</p> -->
+			
 
     </body>   
 </html>
