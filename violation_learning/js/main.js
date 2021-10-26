@@ -106,16 +106,16 @@ var feedback = {
     prompt: function(){
 		var last_trial = jsPsych.data.get().last(1).values()[0];	//display a message according to whether it's correct or not, and RT
 		if (last_trial.rt > slow_limit && last_trial.key_press == last_trial.correct_response){
-			return '<p><strong>Try to be faster!</strong></p><p>&nbsp;</p>';
+			return '<p><strong>Try to be faster!</strong></p><p>&nbsp;</p><p>&nbsp;</p>';
 		}
 		if (last_trial.rt <= slow_limit && last_trial.key_press == last_trial.correct_response){
-			return '<p><strong>Correct!</strong></p><p>&nbsp;</p>'; 
+			return '<p><strong>Correct!</strong></p><p>&nbsp;</p><p>&nbsp;</p>'; 
 		}
 		if (last_trial.rt <= slow_limit && last_trial.key_press !== last_trial.correct_response){
-			return '<p><strong>Wrong key!</strong></p><p>&nbsp;</p>'; 
+			return '<p><strong>Wrong key!</strong></p><p>&nbsp;</p><p>&nbsp;</p>'; 
 		}
 		if (last_trial.rt > slow_limit && last_trial.key_press !== last_trial.correct_response){
-			return '<p><strong>Wrong key, and try to be faster!</strong></p><p>&nbsp;</p>'; 
+			return '<p><strong>Wrong key, and try to be faster!</strong></p><p>&nbsp;</p><p>&nbsp;</p>'; 
 		}
     },
     on_finish: function(data){
