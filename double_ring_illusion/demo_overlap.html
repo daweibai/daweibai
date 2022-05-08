@@ -108,12 +108,19 @@ display = function() {
 				// 2nd circle
 				drawCircle(c, canvas_width/2-25, canvas_height/2, this.width)
 				drawCircle(c, canvas_width/2+25, canvas_height/2, this.width)
-
+				
+				// // fixation cross
+				c.beginPath();
+				c.rect(canvas_width/2 - 10, canvas_height/2 - 2.5, 20, 5);
+				c.rect(canvas_width/2 - 2.5,  canvas_height/2 - 10, 5, 20);
+				c.fillStyle = 'blue';
+				c.fill();
+				
 				// text
 				c.font = '17px serif';
 				c.fillStyle = "black";
 				c.textAlign = "center"
-				c.fillText('Please attend globally to the scene', canvas_width/2, 70)
+				c.fillText('Please look at the fixation cross, or attend globally to the scene', canvas_width/2, 70)
 				c.fillText('(Instead of focusing on/tracking a specific spot on the rings)', canvas_width/2, 95)
 			}
 			

@@ -130,12 +130,19 @@ display = function() {
 				c.ellipse(canvas_width/2+25, canvas_height/2, this.width, r_ring, 0, 1.42 * Math.PI, 1.58 * Math.PI);
 				c.stroke();
 				c.closePath();
-
+				
+				// // fixation cross
+				c.beginPath();
+				c.rect(canvas_width/2 - 10, canvas_height/2 - 2.5, 20, 5);
+				c.rect(canvas_width/2 - 2.5,  canvas_height/2 - 10, 5, 20);
+				c.fillStyle = 'blue';
+				c.fill();
+				
 				// text
 				c.font = '17px serif';
 				c.fillStyle = "black";
 				c.textAlign = "center"
-				c.fillText('Please attend globally to the scene', canvas_width/2, 70)
+				c.fillText('Please look at the fixation cross, or attend globally to the scene', canvas_width/2, 70)
 				c.fillText('(Instead of focusing on/tracking a specific spot on the rings)', canvas_width/2, 95)
 			}
 		};
