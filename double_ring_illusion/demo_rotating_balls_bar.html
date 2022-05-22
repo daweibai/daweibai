@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="jspsych-6.0.5/jspsych.js"></script>
+        <script src="jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
+
+
+    </head>
+    <style>
+        #canvas {
+            z-index: 1; 
+            position:absolute; 
+            right:00%; 
+            top:00%;
+            margin-right:10px;
+            margin-top:30px;
+            border: 2px solid black;
+        }
+		p {
+			font-family: verdana;
+			font-size: 13px;
+		}
+
+
+    </style>
+    <body>
+		<canvas id="canvas"></canvas>
+
+        <script>
+
+
+
+const n_balls 	 = 1, 
+	g   		 = 0.35,
+	vy 			 = 0, 
+	r_ball 		 = 39,
+	init_speed_limit = 3,
+	cross_length = 15,
+	cross_width  = 4,
+	ball_color	 = "#2185C5",
+	pi 			 = Math.PI,
+
+	n_training	 = 40,
+	n_trials	 = 65,
+	nTrialEachCondition = n_trials/5
+
+	canvas_width = 950,
+	canvas_height = 740;
+
+
+
+let stopID;
+
+
+var conditionArray = [
+	"down",
+	"up",
+	"left",
+	"right"
+]
+
+var trainArrayShuffled 	   = jsPsych.randomization.repeat(conditionArray, 10);
+
+
+// Utility Functions
+function randomIntFromRange(min,max) {
+	return Math.random() * (max - min) + min;
+}
+
+function randomAngle() {
+	return Math.floor(Math.random() * 4) * Math.PI /2;
+}
+
+
+// resize canvas
+function resize() {
+	canvas.width = canvas_width;
+	canvas.height = canvas_height;
+}
+
+// end trial if space pressed
+function endTrial(e) {  
+	if  (e.keyCode == '32') { //if press 'space'
+
+		document.removeEventListener('keydown', endTrial)
+		cancelAnimationFrame(stopID)        
+
+        jsPsych.finishTrial()
+	} 
+}
+
+function drawCircle(c, drawX, drawY, width) {
+	c.beginPath();
+	c.ellipse(drawX, drawY, width, r_ball, 0, 0, 2 * Math.PI);
+	c.stroke();
+	c.closePath();
+}
+
+
+var track_angle 
+
+var trialCounter = 0
+
+display = function() {    
+
+	
+	// trialCounter = trialCounter + 1
+
+	var canvas  = document.getElementById('canvas');
+	var c 		= canvas.getContext('2d');
+
+
+	resize()
+
+	function Ball(angle, radius, color, target) {
+		this.dx = 0;
+		this.dy = vy;
+		this.gravityDirection 	= angle
+		this.radius = radius;
+		this.color = color;
+		this.target = target;
+		
+		this.width = r_ball
+		this.angle = 0
+		this.vAngle = 2 * pi/100
+
+		this.x = canvas_width/2
+		this.y = canvas_height/2
+
+		this.update = function() {
+			
+			this.angle += this.vAngle
+			this.width = Math.abs(Math.sin(this.angle) * r_ball)
+			this.width2 = Math.abs(Math.cos(this.angle) * r_ball)
+			
+			this.widthNoAbs = Math.sin(this.angle) * r_ball *1.5 * 1.33
+
+            this.drawX = this.x;
+            this.drawY = this.y;
+			
+			this.draw();
+		};
+		this.draw = function() {
+
+			t1 = performance.now()
+
+		if (t1 - t0 < 1000) {
+			c.fillStyle = 'black'
+			for (column = 16; column <= 34; column++ ) {
+				for (row = 20; row <= 30; row++ ) {
+					die = Math.random()
+					if (die < 0.5) {
+						c.fillRect((canvas_width/50) * column, (canvas_height/50)*row, canvas_width/50, canvas_height/50)
+
+					}
+				}
+			}
+		} else {
+
+			c.lineWidth = 5;
+			c.lineCap = 'round';
+			c.strokeStyle = 'black'
+
+
+			// line and ball
+			c.lineWidth = 13;
+
+			c.beginPath();
+			c.moveTo(this.drawX, 0);
+			c.lineTo(this.drawX, canvas_height);
+			c.stroke();
+			c.closePath();
+
+			
+			// top ball
+			c.beginPath();
+			c.ellipse(this.drawX + this.widthNoAbs, canvas_height/2, r_ball*0.3, r_ball*0.3, 0, 0, 2 * Math.PI);
+			c.fillStyle = 'black'
+			c.fill()
+			c.stroke();
+			c.closePath();
+			
+			// fixation cross
+			c.fillStyle = 'white'
+			c.beginPath();
+			c.rect(this.drawX - 4, canvas_height/2 -39 - 1, 8, 2);
+			c.rect(this.drawX - 1, canvas_height/2 -39 - 4, 2, 8);
+			c.fill();
+			c.setLineDash([0]);
+
+
+			c.lineWidth = 10;
+
+		
+			}
+		};
+	}
+	
+	var ballArray = [];
+	
+	function init() {
+		ballArray = [];
+		t0 = performance.now()
+
+		track_angle = trainArrayShuffled[trialCounter-1]
+
+		for (let i = 0; i < n_balls; i++) {
+			ballArray.push(new Ball(track_angle, r_ball, ball_color, true));
+		}
+
+	}
+	
+	// Animation Loop
+	function animate() {
+		stopID = window.requestAnimationFrame(animate);
+
+		c.clearRect(0, 0, canvas.width, canvas.height);
+		
+		for (let i = 0; i < ballArray.length; i++) {
+			ballArray[i].update();
+		}
+
+		t_stopper = performance.now()
+
+		document.addEventListener('keydown', endTrial);
+
+
+	}
+	
+	init();
+	
+	animate();
+}
+
+
+display()
+
+
+</script>  
+	<h1 style="font-family:verdana; text-align:left; font-size: 21px;position: relative; top: 20px">The double ring illusion</h1>
+	<h4 style="font-family:verdana; text-align:left; font-size: 14px;position: relative; top: 20px">by Dawei Bai</h4>
+	<h4 style="font-family:verdana; text-align:left; font-size: 11px;position: relative; top: 20px">Ecole Normale Supérieure, CNRS, Paris, France</h4>
+
+	<p style="position: relative; top: 150px"><a href= "demo_sep.html">Separated</a></p>
+	<p style="position: relative; top: 150px"><a href= "demo_overlap.html">Overlapping</a></p>
+	<p style="position: relative; top: 150px"><a href= "demo_gapped.html">Gapped</a></p>
+
+	<p style="position: relative; top: 150px"><a href= "demo_rotating_sticks_sep.html"> <br>Sticks-sep</a></p>
+	<p style="position: relative; top: 150px"><a href= "demo_rotating_sticks_overlap.html">Sticks-overlap</a></p>
+
+	<p style="position: relative; top: 150px"><a href= "demo_rotating_balls_nobar.html"> <br>Ball-no-bar</a></p>
+	<p style="position: relative; top: 150px">Ball-bar</p>
+
+
+
+    </body>   
+</html>
