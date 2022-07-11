@@ -63,7 +63,7 @@ display = function() {
 
 		this.update = function() {
 			c.fillStyle = 'white'
-			c.fillRect(0, 0, canvas_width, canvas_height)
+			// c.fillRect(0, 0, canvas_width, canvas_height)
 
 
 			this.angle += this.vAngle
@@ -81,22 +81,32 @@ display = function() {
 
 			this.draw();
 		};
+		var maskFrameCounter = 0
+
 		this.draw = function() {
 
 			t1 = performance.now()
+			c.fillStyle = 'black'
 
-			if (t1 - t0 < 1000) {
-				c.fillStyle = 'black'
-				for (column = 16; column <= 34; column++ ) {
-					for (row = 20; row <= 30; row++ ) {
-						die = Math.random()
-						if (die < 0.5) {
-							c.fillRect((canvas_width/50) * column, (canvas_height/50)*row, canvas_width/50, canvas_height/50)
+			if (t1 - t0 < 1500) {
+				if (maskFrameCounter/3 == Math.floor(maskFrameCounter/3)){
+					c.clearRect(0, 0, canvas.width, canvas.height);
+					
+					for (column = 16; column <= 34; column++ ) {
+						for (row = 20; row <= 30; row++ ) {
+							die = Math.random()
+							if (die < 0.5) {
+								c.fillRect((canvas_width/50) * column, (canvas_height/50)*row, canvas_width/50, canvas_height/50)
 
+							}
 						}
 					}
 				}
+				maskFrameCounter+= 1
+
 			} else {
+				c.clearRect(0, 0, canvas.width, canvas.height);
+
 				c.lineWidth = 10;
 				// 2nd circle
 				drawCircle(c, canvas_width/2-25, canvas_height/2, this.width)
@@ -133,7 +143,7 @@ display = function() {
 	function animate() {
 		stopID = window.requestAnimationFrame(animate);
 
-		c.clearRect(0, 0, canvas.width, canvas.height);
+		// c.clearRect(0, 0, canvas.width, canvas.height);
 		
 		for (let i = 0; i < ballArray.length; i++) {
 			ballArray[i].update();
@@ -149,19 +159,24 @@ display = function() {
 display()
 
         </script>  
-			<h1 style="font-family:verdana; text-align:left; font-size: 21px;position: relative; top: 20px">The double ring illusion</h1>
-			<h1 style="font-family:verdana; text-align:left; font-size: 15px;position: relative; top: 20px">(and two others)</h1>
+			<h1 style="font-family:verdana; text-align:left; font-size: 21px;position: relative; top: 20px; width : 33%">Object solidity disambiguates ambiguous motion</h1>
+			<h2 style="font-family:verdana; text-align:left; font-size: 15px;position: relative; top: 20px; width : 33%">Dawei Bai & Brent Strickland</h1>
+			<br>
+			<h2 style="font-family:verdana; text-align:left; font-size: 15px;position: relative; top: 20px; width : 33%; color: darkred">When you look at the fixation cross, how do the rings appear to move?</h1>
+				
 
+			<p style="position: relative; top: 150px"><strong>Double Ring</strong></a></p>
 			<p style="position: relative; top: 150px"><a href= "demo_sep.html">Separated</a></p>
 			<p style="position: relative; top: 150px">Overlapping</p>
 			<p style="position: relative; top: 150px"><a href= "demo_gapped.html">Gapped</a></p>
 
-			<p style="position: relative; top: 150px"><a href= "demo_rotating_sticks_sep.html"> <br>Sticks-sep</a></p>
+			<!-- <p style="position: relative; top: 150px"><a href= "demo_rotating_sticks_sep.html"> <br>Sticks-sep</a></p>
 			<p style="position: relative; top: 150px"><a href= "demo_rotating_sticks_overlap.html">Sticks-overlap</a></p>
-			<p style="position: relative; top: 150px"><a href= "demo_rotating_sticks_gapped.html">Sticks-gapped</a></p>
-
-			<p style="position: relative; top: 150px"><a href= "demo_rotating_balls_nobar.html"> <br>Ball-no-bar</a></p>
-			<p style="position: relative; top: 150px"><a href= "demo_rotating_balls_bar.html">Ball-bar</a></p>
+			<p style="position: relative; top: 150px"><a href= "demo_rotating_sticks_gapped.html">Sticks-gapped</a></p> -->
+			<br>
+			<p style="position: relative; top: 150px"><strong>Ball & Bar</strong></a></p>
+			<p style="position: relative; top: 150px"><a href= "demo_rotating_balls_nobar.html">Ball without bar</a></p>
+			<p style="position: relative; top: 150px"><a href= "demo_rotating_balls_bar.html">Ball with bar</a></p>
 		
 
     </body>   
