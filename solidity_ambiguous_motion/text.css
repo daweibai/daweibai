@@ -1,0 +1,62 @@
+#canvas {
+    z-index: 1; 
+    position:absolute; 
+    left:50%; 
+    top:  50%;
+    margin-left:-470px;
+    margin-top:-250px;
+    border: 2px solid black;
+}
+
+p {
+    position:absolute; 
+    font-family: verdana;
+    font-size: 13px;
+}
+
+#below {
+    left: 50%;
+    top: 50%;
+    margin-left: -470px;
+    margin-top:+260px;
+    line-height: 25px;
+    
+}
+
+#bb {
+    left: 50%;
+    top: 50%;
+    margin-left: -550px;
+    margin-top:-200px;
+    line-height: 25px;
+    margin-top:0px;
+}
+
+#title {
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 100px;
+    line-height: 56px;
+    
+}
+
+#explanation {
+    left: 50%;
+    top: 50%;
+    line-height: 25px;
+    margin-left: 60px;
+    margin-top:-260px;
+    width: 400px;
+}
+
+h1 {
+    text-align:center;
+    position:absolute; 
+    margin-top:-350px;
+    margin-left:-470px;
+    top:  50%;
+    left:  50%;
+    font-family: verdana;
+    font-size: 27px;
+
+}

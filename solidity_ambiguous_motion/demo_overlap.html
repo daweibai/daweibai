@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<title>Object solidity disambiguates ambiguous motion</title>
+        <link rel="stylesheet" href="text.css"></link>
+		<meta charset="utf-8">
+
+    </head>
+    <body>
+		<canvas id="canvas"></canvas>
+    <script>
+
+
+const r_ring 		 = 50,
+	pi 			 = Math.PI
+
+
+	canvas_width =500,
+	canvas_height = 500;
+
+// resize canvas
+function resize() {
+	canvas.width = canvas_width;
+	canvas.height = canvas_height;
+}
+
+
+function drawCircle(c, drawX, drawY, width) {
+	c.beginPath();
+	c.ellipse(drawX, drawY, width, r_ring, 0, 0, 2 * Math.PI);
+	c.stroke();
+	c.closePath();
+}
+
+display = function() {    
+
+	var canvas  = document.getElementById('canvas');
+	var c 		= canvas.getContext('2d');
+
+	resize()
+
+	function Ball() {
+		
+		this.width = r_ring
+		this.angle = 0
+		this.vAngle = 2 * pi/100
+
+		this.update = function() {
+			c.fillStyle = 'white'
+			// c.fillRect(0, 0, canvas_width, canvas_height)
+
+
+			this.angle += this.vAngle
+			this.width = Math.abs(Math.sin(this.angle) * r_ring)
+			this.width2 = Math.abs(Math.cos(this.angle) * r_ring)
+			
+			if (this.width< 0.0001) {
+				this.width = 0.0001
+			}
+			
+			if (this.width2< 0.0001) {
+				this.width2 = 0.0001
+			}
+			this.widthNoAbs = Math.sin(this.angle) * r_ring
+
+			this.draw();
+		};
+		var maskFrameCounter = 0
+
+		this.draw = function() {
+
+			t1 = performance.now()
+			c.fillStyle = 'black'
+
+			if (t1 - t0 < 1500) {
+				if (maskFrameCounter/3 == Math.floor(maskFrameCounter/3)){
+					c.clearRect(0, 0, canvas.width, canvas.height);
+					
+					for (column = 12; column <= 38; column++ ) {
+						for (row = 19; row <= 31; row++ ) {
+							die = Math.random()
+							if (die < 0.5) {
+								c.fillRect((canvas_width/50) * column, (canvas_height/50)*row, canvas_width/50, canvas_height/50)
+
+							}
+						}
+					}
+				}
+				maskFrameCounter+= 1
+
+			} else {
+				c.clearRect(0, 0, canvas.width, canvas.height);
+
+				c.strokeStyle = 'darkgreen'
+				c.lineWidth = 10;
+				// 2nd circle
+				drawCircle(c, canvas_width/2-25, canvas_height/2, this.width)
+				drawCircle(c, canvas_width/2+25, canvas_height/2, this.width)
+				
+				// // fixation cross
+				c.beginPath();
+				c.rect(canvas_width/2 - 10, canvas_height/2 - 2.5, 20, 5);
+				c.rect(canvas_width/2 - 2.5,  canvas_height/2 - 10, 5, 20);
+				c.fillStyle = 'black';
+				c.fill();
+				
+				// text
+				c.font = '15px verdana';
+				c.fillStyle = "black";
+				c.textAlign = "center"
+				c.fillText('How do the rings move when you look at the fixation cross?', canvas_width/2, 150)
+
+			}
+			
+		};
+	}
+	
+	var ballArray = [];
+	
+	function init() {
+		ballArray = [];
+
+		ballArray.push(new Ball());
+		t0 = performance.now()
+
+	}
+	
+	// Animation Loop
+	function animate() {
+		stopID = window.requestAnimationFrame(animate);
+
+		// c.clearRect(0, 0, canvas.width, canvas.height);
+		
+		for (let i = 0; i < ballArray.length; i++) {
+			ballArray[i].update();
+		}
+	}
+	
+	init();
+	
+	animate();
+}
+
+
+display()
+
+        </script>  
+			<h1>Demo (2/7): Object solidity disambiguates ambiguous motion</h1>
+			
+			<p id="explanation">
+				<strong id = "title">Explanation</strong> <br>
+				Now do you see a <strong>stable</strong> percept?<br>
+				Indeed, most participants saw the rings move in <strong>stable 180° rotations</strong>, 
+				as if they are "avoiding" to traverse each other. <br>
+				<br>
+				In reality, the rings are the same as before, except that now they overlap. <br>
+				<br>
+				This suggests that our visual system uses the physical law of "object solidity"
+				(i.e. objects cannot pass through each other) to interpret ambiguous motions.<br>
+				<br>
+				<a href= "demo_gapped.html">Click to advance</a>
+			</p>
+
+
+			<p id = "below"><strong>Display 1 Double Ring:</strong></a>
+			<a href= "demo_sep.html">Separated</a>
+			Overlapping
+			<a href= "demo_gapped.html">Gapped</a> <strong>|</strong>
+			<a href= "demo_shadows.html">Shadows</a><br>
+
+			<strong>Display 2 Ball & Bar:</strong>
+			<a href= "demo_rotating_balls_nobar.html">Ball without bar</a>
+			<a href= "demo_rotating_balls_bar.html">Ball with bar</a> <strong>|</strong> 
+			<a href= "demo_rotating_balls_sv.html">Size Variation</a><br>
+		</p>
+    </body>   
+</html>
