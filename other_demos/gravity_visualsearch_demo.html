@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="jspsych-6.0.5/jspsych.js"></script>
+        <script src="jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
+        <script src="jspsych-6.0.5/plugins/jspsych-html-button-response.js"></script>
+        <script src="jspsych-6.0.5/plugins/jspsych-call-function.js"></script>
+        <script src="jspsych-6.0.5/plugins/jspsych-survey-text.js"></script>
+        <script src="jspsych-6.0.5/plugins/jspsych-psychophysics.js"></script>  
+        <link rel="stylesheet" href="jspsych-6.0.5/css/jspsych.css"></link>
+        <script src="js/io.js"></script>  
+
+    </head>
+    <style>
+        #canvas {
+            z-index: 1; 
+            position:absolute; 
+            left:50%; 
+            top:50%;
+            margin-left:-300px;
+            margin-top:-300px;
+            border: 2px solid black;
+        }
+        #canvas2 {
+            z-index: 2; 
+            position:absolute; 
+            left:50%; 
+            top:50%;
+            margin-left:-300px;
+            margin-top:-300px;
+            border: 2px solid black;
+        }
+
+
+    </style>
+    <body>
+        <script>
+
+
+
+const n_each_direction = 5,
+	n_balls 	 = n_each_direction * 3, 
+	g   		 = 0.12,
+	r_ball 		 = 14,
+	init_speed_limit = 3,
+	cross_length = 15,
+	cross_width  = 4,
+	ball_color	 = "#2185C5",
+	pi 			 = Math.PI,
+
+	n_training	 = 50,
+	n_trials	 = 65,
+	nTrialEachCondition = n_trials/5
+
+	canvas_width = 600,
+	canvas_height = 600,
+
+	mask_interval = 1200;
+
+
+
+let stopID 
+let t_stopper, t1, t0
+
+let ballTooCloseToCenter
+let isTraining
+const centerRange  = 100
+	
+var conditionArray = [
+	pi /2,
+	pi,
+	pi * 3/2,
+	pi * 2,
+	'absent',
+]
+
+var trainArrayShuffled 	   = jsPsych.randomization.repeat(conditionArray, 8);
+var conditionArrayShuffled = jsPsych.randomization.repeat(conditionArray, nTrialEachCondition);
+
+
+// Utility Functions
+function randomIntFromRange(min,max) {
+	return Math.random() * (max - min) + min;
+}
+
+function randomAngle() {
+	return Math.floor(Math.random() * 4) * Math.PI /2;
+}
+
+
+// resize canvas
+function resize() {
+	canvas.width = canvas_width;
+	canvas.height = canvas_height;
+	canvas2.width = canvas_width;
+	canvas2.height = canvas_height;
+}
+
+// end trial if space pressed
+function endTrial(e) {  
+	if  (e.keyCode == '32') { //if press 'space'
+
+		document.removeEventListener('keydown', endTrial)
+		cancelAnimationFrame(stopID)        
+		
+		correct = correctKey == e.keyCode // determine accuracy
+		
+        // save data
+		t1 = performance.now()
+		rt = t1 - t0 - mask_interval
+		jsPsych.data.write({rt: rt, track_angle: track_angle, targetPressedX : targetPressedX, targetPressedY: targetPressedY, trial: trialCounter, keyPressed: e.keyCode, correct_key: correctKey, correct: correct})    
+
+        jsPsych.finishTrial()
+	} else if (e.keyCode == '78') { // if press 'n'
+		document.removeEventListener('keydown', endTrial)
+		cancelAnimationFrame(stopID)        
+		
+		correct = correctKey == e.keyCode
+		
+		// save data
+		t1 = performance.now()
+		rt = t1 - t0 - mask_interval
+		jsPsych.data.write({rt: rt, track_angle: track_angle, targetPressedX : targetPressedX, targetPressedY: targetPressedY, trial: trialCounter, keyPressed: e.keyCode, correct_key: correctKey, correct: correct})    
+
+		jsPsych.finishTrial()
+
+	}
+}
+
+var targetPressedX // target position when 'space' is pressed
+var targetPressedY
+
+var correctKey
+var correct
+var track_angle 
+
+var trialCounter = 0
+
+display = function() {    
+
+	
+	trialCounter = trialCounter + 1
+
+	var canvas  = document.getElementById('canvas');
+	var c 		= canvas.getContext('2d');
+	var canvas2 = document.getElementById('canvas2');
+	var c2 		= canvas2.getContext('2d');
+
+	resize()
+
+	function Ball(x, y, dx, dy, angle, radius, color, target) {
+		this.x = x;
+		this.y = y;
+		this.dx = dx;
+		this.dy = dy;
+		this.angle 	= angle
+		this.radius = radius;
+		this.color = color;
+		this.target = target;
+	
+		this.update = function() {
+			if ((this.y + this.radius + this.dy> canvas.height)||(this.y + this.dy<= 0 + this.radius)) {
+				this.dy = -this.dy;
+
+			} else if ((this.x + this.radius + this.dx>= canvas.width) || (this.x + this.dx <= 0 + this.radius)) {
+				this.dx = -this.dx;
+
+			} else {
+				this.dx += g * Math.cos(this.angle);
+				this.dy += g * Math.sin(this.angle);
+			}
+			
+			this.x += this.dx;
+			this.y += this.dy;
+			this.draw();
+		};
+	
+		this.draw = function() {
+			c.beginPath();
+			c.arc(this.x, this.y, this.radius, 0, pi * 2, false);	
+			c.fillStyle = this.color;
+			c.fill();
+			c.stroke();
+			c.closePath();
+	
+			// cross on the ball 
+			// if not target, then draw cross
+			if (this.target == false) {
+				c.beginPath();
+				c.rect(this.x - cross_width/2, this.y - cross_length/2, cross_width, cross_length );
+				c.rect(this.x - cross_length/2, this.y - cross_width/2, cross_length, cross_width );
+				c.fillStyle = 'white';
+				c.fill();
+			} else {
+			// // if target, then draw T
+				c.beginPath();
+				c.rect(this.x - cross_width/2, this.y - cross_length/2 +2, cross_width, cross_length -2);
+				c.rect(this.x - cross_length/2, this.y - cross_width/2 - 5, cross_length, cross_width );
+				c.fillStyle = 'white';
+				c.fill();
+
+				targetPressedX = this.x
+				targetPressedY = this.y
+			}
+		};
+	}
+	
+	var ballArray = [];
+	
+	function init() {
+		var angle_set = [
+			pi /2,
+			pi,
+			pi * 3/2,
+			pi * 2,
+		]
+
+		ballArray = [];
+		t0 = performance.now()
+
+		if (isTraining) {
+			track_angle = trainArrayShuffled[trialCounter-1]
+		} else {
+			track_angle = conditionArrayShuffled[trialCounter-1]
+		} 
+		
+		if (track_angle== "absent") {
+			correctKey = "78" 
+		} else {
+			correctKey = "32" 
+		}
+
+
+
+		if (track_angle == "absent") {  // if the target ball is absent
+			var track_angle_invis = randomAngle()
+		
+			index = angle_set.indexOf(track_angle_invis); 
+			angle_set.splice(index,1) // remove a random direction from the angle set
+
+		} else {
+			index = angle_set.indexOf(track_angle); 
+			angle_set.splice(index,1) // remove the target ball's direction from the angle set
+
+			// target ball
+			var track_x = randomIntFromRange(r_ball * 2, canvas.width - r_ball * 2);
+			var track_y = randomIntFromRange(r_ball * 2, canvas.height - r_ball * 2);
+			var track_dx = randomIntFromRange(-init_speed_limit, init_speed_limit)
+			var track_dy = randomIntFromRange(-init_speed_limit, init_speed_limit)
+		
+			ballTooCloseToCenter = Math.sqrt((track_x - canvas_width/2) **2 + (track_y - canvas_height/2) **2) <= centerRange
+			while (ballTooCloseToCenter) {
+				track_x = randomIntFromRange(r_ball * 2, canvas.width - r_ball * 2);
+				track_y = randomIntFromRange(r_ball * 2, canvas.height - r_ball * 2);
+				ballTooCloseToCenter = Math.sqrt((track_x - canvas_width/2) **2 + (track_y - canvas_height/2) **2) <= centerRange
+			}
+		}
+
+		// non-target balls
+		for (let i = 0; i < n_balls; i++) {
+			var x = randomIntFromRange(r_ball * 2, canvas.width - r_ball * 2);
+			var y = randomIntFromRange(r_ball * 2, canvas.height - r_ball * 2);
+			var dx = randomIntFromRange(-init_speed_limit, init_speed_limit)
+			var dy = randomIntFromRange(-init_speed_limit, init_speed_limit)
+			var n = Math.floor(i /n_each_direction)
+			var angle  =  angle_set[n]
+			ballArray.push(new Ball(x, y, dx, dy, angle, r_ball, ball_color, false));
+		}
+
+		ballArray.push(new Ball(track_x, track_y, track_dx, track_dy, track_angle, r_ball, ball_color, true));
+		// jsPsych.data.write({track_angle: track_angle, recording: 'angle', correct_key: correctKey, trial: trialCounter})
+	}
+	
+	// Animation Loop
+	function animate() {
+		stopID = window.requestAnimationFrame(animate);
+
+		c.clearRect(0, 0, canvas.width, canvas.height);
+		
+		for (let i = 0; i < ballArray.length; i++) {
+			ballArray[i].update();
+		}
+
+		// draw mask
+		c2.beginPath();
+		c2.rect(0,0, canvas.width, canvas.height);
+		c2.fillStyle = 'white';
+		c2.fill();
+
+		// fixation cross
+		c2.beginPath();
+		c2.rect(canvas.width/2 - 20, canvas.height/2 - 4, 40, 8);
+		c2.rect(canvas.width/2 - 4,  canvas.height/2 - 20, 8, 40);
+		c2.fillStyle = 'black';
+		c2.fill();
+
+		t_stopper = performance.now()
+
+		if (t_stopper - t0 > mask_interval) { // remove mask
+			c2.clearRect(0, 0, canvas.width, canvas.height);
+			document.addEventListener('keydown', endTrial);
+		}		
+	}
+	
+	init();
+	
+	animate();
+}
+
+
+
+var training_trial = {       
+	type:       'html-keyboard-response',     
+	stimulus: 	'<canvas id="canvas2"></canvas>'+ // canvas on top
+				'<canvas id="canvas"></canvas>' + 
+				'<p style = "position: relative; left: 400px; ; width: 150px">' +
+				'If you spot the <img src= "figures/T_ball.jpg" style="width:20px">, press "space". If there is no <img src= "figures/T_ball.jpg" style="width:20px"> in the scene, press "n".</p>',
+				
+	data: {test_part: 'training'},			
+	choices: jsPsych.NO_KEYS,
+	on_load: function() {
+		isTraining = true 
+		display()
+	},
+}
+
+
+
+var showCorrect = {
+    type: "html-keyboard-response",
+	stimulus: "",
+	data: {test_part: 'showCorrect'},
+	choices: jsPsych.NO_KEYS,
+	trial_duration: 1000,
+	prompt: function() {
+		var lastTrial = jsPsych.data.get().last(2).values()[0]
+		console.log(lastTrial.track_angle)
+		if (lastTrial.correct) {
+			if (lastTrial.rt > 3000) {
+				return "<h3>Correct, but try to be faster!</h3>"
+			} else {
+				return "<h3>Correct!</h3>"
+			}
+		} else {
+			return "<h3>Incorrect!</h3>"
+		}
+	}
+};
+
+
+
+//-------------------------------------------------------------------------
+// Instructions and stuff
+//-------------------------------------------------------------------------
+var is_mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)  // true for mobile device
+var mobile_warning = {
+    data: {
+        test_part: 'browser-check'
+    },
+    type: 'html-button-response',
+    button_html: '<button class="jspsych-btn" style="width: 300px;">%choice%</button><br><br><br>',
+    stimulus: '<p><strong>It seems you are using a mobile phone - this experiment will not work properly.</strong></p><p>Please try using a computer.</p>',
+    choices: ['<strong>Exit<br>experiment</strong>'],
+    on_finish: function (data){
+        if (data.button_pressed == 0)
+	    jsPsych.endExperiment('Experiment aborted.');
+    },
+};
+
+var is_firefox = typeof InstallTrigger !== 'undefined';
+
+var browser_warning = {
+    data: {
+        test_part: 'browser-check'
+    },
+    type: 'html-keyboard-response',
+	stimulus: '<p>It seems you are using Firefox - this experiment will not work properly. Please use Chrome.</p>',
+    choices: jsPsych.NO_KEYS,
+
+};
+
+
+
+
+//-------------------------------------------------------------------------
+// Timeline
+//-------------------------------------------------------------------------
+var timeline = []
+if (is_mobile){
+    timeline.push(mobile_warning);
+}	
+
+if (is_firefox){ 
+    timeline.push(browser_warning);
+}	
+
+
+for (i = 0; i < n_training; i++){
+	timeline.push(training_trial, showCorrect)
+}
+
+
+
+jsPsych.init({      
+	timeline: timeline,        
+	// on_finish: function(){jsPsych.data.displayData();}
+});
+
+        </script>  
+
+    </body>   
+</html>
