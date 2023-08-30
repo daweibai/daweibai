@@ -1,15 +1,43 @@
 <!DOCTYPE html>
 <html>
     <head>
-		<title>Object solidity disambiguates ambiguous motion</title>
+		<title>Solidity shapes the perception of object motion</title>
         <link rel="stylesheet" href="text.css"></link>
 		<meta charset="utf-8">
 
     </head>
     <body>
 		<canvas id="canvas"></canvas>
+
+		<h1>Demo (3/3): Solidity shapes the perception of object motion<br><span class="output-browser"></span></h1>
+		<br>
+
+		<p id="explanation">
+				<strong id = "title">Explanation</strong> <br>
+				Here, the preference for the 180° interpretation is reduced (for many, the unstable percept is restored).<br>
+				This is likely due to the fact that object solidity can no longer be violated thanks to the gaps.<br>
+				<br>
+				This also suggests that the proximity of the rings cannot explain the effect. The visual system indeed incorporates solidity to guide interpretations of ambiguous motions.<br>
+				<br>
+		</p>
+
+		<p id = "below">
+			<a href= "demo_sep.html">Separated</a>
+			<a href= "demo_overlap.html">Overlapping</a>
+			Gapped
+		</p>
+
     <script>
 
+
+// Detect browser
+var is_firefox = typeof InstallTrigger !== 'undefined';
+var isIE = /*@cc_on!@*/false || !!document.documentMode;
+
+if ((is_firefox || isIE)){
+	var browserOutput = "You are using Firefox or Internet Explorer, the stimuli might not be displayed correctly. Please use Chrome or Safari."
+	document.querySelector(".output-browser").textContent = browserOutput;
+}
 
 
 const r_ring 		 = 50,
@@ -164,34 +192,5 @@ display = function() {
 display()
 
         </script>  
-			<!-- <h1>Demo (3/7): Object solidity biases motion perception</h1> -->
-			<h1>Demo (3/3): Solidity shapes the perception of object motion</h1>
-			<br>
-
-
-			<p id="explanation">
-				<strong id = "title">Explanation</strong> <br>
-				Here, the preference for the 180° interpretation is reduced (for many, the unstable percept is restored).<br>
-				This is likely due to the fact that object solidity can no longer be violated thanks to the gaps.<br>
-				<br>
-				This also suggests that the proximity of the rings cannot explain the effect. The visual system indeed incorporates solidity to guide interpretations of ambiguous motions.<br>
-				<br>
-				<!-- This is confirmed by our data:
-				<img src="img/response (Exp1 for demo).png" width="350px"><br> -->
-
-				<!-- <a href= "demo_shadows.html">Click to advance</a> -->
-				<a href= "demo_overlap.html">Back</a>
-			</p>
-
-			<!-- <p id = "below"><strong>Display 1 Double Ring: </strong></a>
-				<a href= "demo_sep.html">Separated</a>
-				<a href= "demo_overlap.html">Overlapping</a>
-				Gapped <strong>|</strong> <a href= "demo_shadows.html">Shadows</a><br>
-				<strong>Display 2 Ball & Bar: </strong>
-				<a href= "demo_rotating_balls_nobar.html">Ball without bar</a>
-				<a href= "demo_rotating_balls_bar.html">Ball with bar</a> <strong>|</strong> 
-				<a href= "demo_rotating_balls_sv.html">Size Variation</a><br>
-			</p> -->
-
     </body>   
 </html>

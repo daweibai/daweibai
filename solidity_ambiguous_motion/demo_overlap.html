@@ -1,14 +1,50 @@
 <!DOCTYPE html>
 <html>
     <head>
-		<title>Object solidity disambiguates ambiguous motion</title>
+		<title>Solidity shapes the perception of object motion</title>
         <link rel="stylesheet" href="text.css"></link>
 		<meta charset="utf-8">
 
     </head>
     <body>
 		<canvas id="canvas"></canvas>
+
+		<h1>Demo (2/3): Solidity shapes the perception of object motion<br><span class="output-browser"></span></h1>
+			
+		<p id="explanation">
+			<strong id = "title">Explanation</strong> <br>
+			Now most participants saw the rings move in <strong>stable 180° rotations</strong>, 
+			as if they are "avoiding" to traverse each other. <br>
+			<br>
+			In reality, the rings are the same as before, except that now they overlap. <br>
+			<br>
+			This suggests that our visual system uses the physical law of "object solidity"
+			(i.e., objects cannot pass through each other) to interpret ambiguous motions: When the stimuli are compatible 
+			with multiple interpretations, the visual system favors the interpretations that respect this law over those that violate it.<br>
+			<br>
+			<a href= "demo_gapped.html" style="float: right">Click to advance</a>
+		</p>
+
+
+		<p id = "below">
+			<a href= "demo_sep.html">Separated</a>
+			Overlapping
+			<a href= "demo_gapped.html">Gapped</a>
+		</p>
+
+
+
+
     <script>
+
+// Detect browser
+var is_firefox = typeof InstallTrigger !== 'undefined';
+var isIE = /*@cc_on!@*/false || !!document.documentMode;
+
+if ((is_firefox || isIE)){
+	var browserOutput = "You are using Firefox or Internet Explorer, the stimuli might not be displayed correctly. Please use Chrome or Safari."
+	document.querySelector(".output-browser").textContent = browserOutput;
+}
 
 
 const r_ring 		 = 50,
@@ -145,34 +181,5 @@ display = function() {
 display()
 
         </script>  
-			<!-- <h1>Demo (2/7): Object solidity biases motion perception</h1> -->
-			<h1>Demo (2/3): Solidity shapes the perception of object motion</h1>
-			
-			<p id="explanation">
-				<strong id = "title">Explanation</strong> <br>
-				Now most participants saw the rings move in <strong>stable 180° rotations</strong>, 
-				as if they are "avoiding" to traverse each other. <br>
-				<br>
-				In reality, the rings are the same as before, except that now they overlap. <br>
-				<br>
-				This suggests that our visual system uses the physical law of "object solidity"
-				(i.e., objects cannot pass through each other) to interpret ambiguous motions: When the stimuli are compatible 
-				with multiple interpretations, the visual system favors the interpretations that respect this law over those that violate it.<br>
-				<br>
-				<a href= "demo_sep.html">Back</a> <a href= "demo_gapped.html">Next</a> 
-			</p>
-
-
-			<!-- <p id = "below"><strong>Display 1 Double Ring:</strong></a>
-			<a href= "demo_sep.html">Separated</a>
-			Overlapping
-			<a href= "demo_gapped.html">Gapped</a> <strong>|</strong>
-			<a href= "demo_shadows.html">Shadows</a><br>
-
-			<strong>Display 2 Ball & Bar:</strong>
-			<a href= "demo_rotating_balls_nobar.html">Ball without bar</a>
-			<a href= "demo_rotating_balls_bar.html">Ball with bar</a> <strong>|</strong> 
-			<a href= "demo_rotating_balls_sv.html">Size Variation</a><br>
-		</p> -->
     </body>   
 </html>
