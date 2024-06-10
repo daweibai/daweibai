@@ -1,74 +1,24 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <script src="jspsych-6.0.5/jspsych.js"></script>
-        <script src="jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
-        <script src="js/io.js"></script>  
+		<title>Object solidity disambiguates ambiguous motion</title>
+        <link rel="stylesheet" href="text.css"></link>
+		<meta charset="utf-8">
 
     </head>
-    <style>
-        #canvas {
-            z-index: 1; 
-            position:absolute; 
-            right:00%; 
-            top:00%;
-            margin-right:10px;
-            border: 2px solid black;
-        }
-		p {
-			font-family: verdana;
-			font-size: 13px;
-		}
-
-
-    </style>
     <body>
 		<canvas id="canvas"></canvas>
-		<script>
+    <script>
 
 
 
-const n_balls 	 = 1, 
-	g   		 = 0.35,
-	vy 			 = 0, 
-	r_ball 		 = 39,
-	init_speed_limit = 3,
-	cross_length = 15,
-	cross_width  = 4,
-	ball_color	 = "#2185C5",
+const r_ball 		 = 39,
 	pi 			 = Math.PI,
+	box_height = 150,
+	box_width = 320,
 
-	n_training	 = 40,
-	n_trials	 = 65,
-	nTrialEachCondition = n_trials/5,
-
-	canvas_width = window.innerWidth * 0.65,
-	canvas_height = window.innerHeight * 0.98;
-
-
-
-let stopID;
-
-
-var conditionArray = [
-	"down",
-	"up",
-	"left",
-	"right"
-]
-
-var trainArrayShuffled 	   = jsPsych.randomization.repeat(conditionArray, 10);
-
-
-// Utility Functions
-function randomIntFromRange(min,max) {
-	return Math.random() * (max - min) + min;
-}
-
-function randomAngle() {
-	return Math.floor(Math.random() * 4) * Math.PI /2;
-}
-
+	canvas_width = 500,
+	canvas_height = 500
 
 // resize canvas
 function resize() {
@@ -76,80 +26,53 @@ function resize() {
 	canvas.height = canvas_height;
 }
 
-// end trial if space pressed
-function endTrial(e) {  
-	if  (e.keyCode == '32') { //if press 'space'
-
-		document.removeEventListener('keydown', endTrial)
-		cancelAnimationFrame(stopID)        
-
-        jsPsych.finishTrial()
-	} 
-}
-
-function drawCircle(c, drawX, drawY, width) {
-	c.beginPath();
-	c.ellipse(drawX, drawY, width, r_ball, 0, 0, 2 * Math.PI);
-	c.stroke();
-	c.closePath();
-}
-
-
-var track_angle 
-
-var trialCounter = 0
 
 display = function() {    
-
-	
-	trialCounter = trialCounter + 1
 
 	var canvas  = document.getElementById('canvas');
 	var c 		= canvas.getContext('2d');
 
-
 	resize()
 
-	function Ball(angle, radius, color, target) {
-		this.dx = 0;
-		this.dy = vy;
-		this.gravityDirection 	= angle
-		this.radius = radius;
-		this.color = color;
-		this.target = target;
+	function Ball() {
 		
 		this.width = r_ball
 		this.angle = 0
 		this.vAngle = 2 * pi/100
-
-		this.x = canvas_width/2
-		this.y = canvas_height/2
+		this.drawX = canvas_width/2
 
 		this.update = function() {
-			
+			c.fillStyle = 'white'
+
+
 			this.angle += this.vAngle
 			this.width = Math.abs(Math.sin(this.angle) * r_ball)
 			this.width2 = Math.abs(Math.cos(this.angle) * r_ball)
 			
-			this.widthNoAbs = Math.sin(this.angle) * r_ball *2
-
-            this.drawX = this.x;
-            this.drawY = this.y;
+			if (this.width< 0.0001) {
+				this.width = 0.0001
+			}
+			
+			if (this.width2< 0.0001) {
+				this.width2 = 0.0001
+			}
+			this.widthNoAbs = Math.sin(this.angle) * r_ball *1.5 * 1.33
 			
 			this.draw();
 		};
 		var maskFrameCounter = 0
+
 		this.draw = function() {
 
 			t1 = performance.now()
+			c.fillStyle = 'black'
 
 			if (t1 - t0 < 1500) {
-				c.fillStyle = 'black'
 				if (maskFrameCounter/3 == Math.floor(maskFrameCounter/3)){
 					c.clearRect(0, 0, canvas.width, canvas.height);
-
-					for (column = 16; column <= 34; column++ ) {
-						for (row = 20; row <= 30; row++ ) {
+					
+					for (column = 10; column <= 40; column++ ) {
+						for (row = 18; row <= 32; row++ ) {
 							die = Math.random()
 							if (die < 0.5) {
 								c.fillRect((canvas_width/50) * column, (canvas_height/50)*row, canvas_width/50, canvas_height/50)
@@ -160,55 +83,54 @@ display = function() {
 				}
 				maskFrameCounter+= 1
 
-		} else {
-			c.clearRect(0, 0, canvas.width, canvas.height);
-			c.lineWidth = 5;
-			c.lineCap = 'round';
-			c.strokeStyle = 'black'
+			} else {			
+				c.clearRect(0, 0, canvas.width, canvas.height);
+
+				c.strokeStyle = 'black'
+
+				// box
+				c.lineWidth = 4
+				c.setLineDash([9, 10]);
+				c.strokeRect((canvas_width - box_width)/2, (canvas_height - box_height)/2, box_width, box_height);
+				c.setLineDash([0]);
+
+				c.lineWidth = 5;
+				c.strokeStyle = 'darkgreen'
+
+				// line and ball
+				c.lineWidth = 13;
+
+				c.beginPath();
+				c.moveTo(canvas_width/2+120, (canvas_height - box_height)/2);
+				c.lineTo(canvas_width/2+120, (canvas_height - box_height)/2 + box_height);
+				c.stroke();
+				c.closePath();
+
+				
+				// top ball
+				c.beginPath();
+				c.ellipse(this.drawX + this.widthNoAbs, canvas_height/2, r_ball*0.3, r_ball*0.3, 0, 0, 2 * Math.PI);
+				c.fillStyle = 'darkgreen'
+				c.fill()
+				c.stroke();
+				c.closePath();
 
 
-			// line
-			c.lineWidth = 13;
 
-			c.beginPath();
-			// c.moveTo(this.drawX, 0);
-			// c.lineTo(this.drawX, canvas_height/2 -39);
-			// c.stroke();
-			// c.closePath();
-			
-			// c.beginPath();
-			// c.moveTo(this.drawX, canvas_height/2+39);
-			// c.lineTo(this.drawX, this.drawY+canvas_height);
-			// c.stroke();
+				// fixation cross
+				c.beginPath();
+				c.rect(canvas_width/2 - 6, canvas_height/2-33 - 2, 12, 4);
+				c.rect(canvas_width/2 - 2, canvas_height/2-33 - 6, 4, 12);
+				c.fillStyle = 'black';
+				c.fill();
 
-			c.moveTo(this.drawX +120, 0);
-			c.lineTo(this.drawX +120, canvas_height);
-			c.stroke();
-			c.closePath();
+				// text
+				c.font = '15px verdana';
+				c.fillStyle = "black";
+				c.textAlign = "center"
+				c.fillText('How does the ball move when you look at the fixation cross?', canvas_width/2, 150)
 
-			
-			// ball
-			c.beginPath();
-			c.ellipse(this.drawX + this.widthNoAbs, canvas_height/2, r_ball*0.3, r_ball*0.3, 0, 0, 2 * Math.PI);
-			c.fillStyle = 'black'
-			c.fill()
-			c.stroke();
-			c.closePath();
-			
-			// fixation cross
-			// c.fillStyle = 'black'
-			// c.beginPath();
-			// c.rect(this.drawX - 4, canvas_height/2 -39 - 1, 8, 2);
-			// c.rect(this.drawX - 1, canvas_height/2 -39 - 4, 2, 8);
-			// c.fill();
-			// c.setLineDash([0]);
-			c.beginPath();
-			c.rect(canvas.width/2 - 6, canvas.height/2-33 - 2, 12, 4);
-			c.rect(canvas.width/2 - 2,  canvas.height/2-33 - 6, 4, 12);
-			c.fillStyle = 'black';
-			c.fill();
 
-			c.lineWidth = 10;
 			}
 		};
 	}
@@ -217,14 +139,9 @@ display = function() {
 	
 	function init() {
 		ballArray = [];
+
+		ballArray.push(new Ball());
 		t0 = performance.now()
-
-		track_angle = trainArrayShuffled[trialCounter-1]
-
-		for (let i = 0; i < n_balls; i++) {
-			ballArray.push(new Ball(track_angle, r_ball, ball_color, true));
-		}
-
 	}
 	
 	// Animation Loop
@@ -236,12 +153,6 @@ display = function() {
 		for (let i = 0; i < ballArray.length; i++) {
 			ballArray[i].update();
 		}
-
-		t_stopper = performance.now()
-
-		document.addEventListener('keydown', endTrial);
-
-
 	}
 	
 	init();
@@ -253,25 +164,32 @@ display = function() {
 display()
 
         </script>  
-			<h1 style="font-family:verdana; text-align:left; font-size: 21px;position: relative; top: 20px; width : 33%">Object solidity disambiguates ambiguous motion</h1>
-			<h2 style="font-family:verdana; text-align:left; font-size: 15px;position: relative; top: 20px; width : 33%">Dawei Bai & Brent Strickland</h1>
+			<h1>Demo (5/7): Object solidity biases motion perception</h1>
+
+
+			<p id="explanation">
+				<strong id = "title">Explanation</strong> <br>
+				To further illustrate the robustness of the effect, we replicated it with another display. <br>
+				<br>
+				Here, most people perceive the ball moving in a "flat" manner, 
+				left and right on the fronto-parallel plane.<br>
 			<br>
-			<h2 style="font-family:verdana; text-align:left; font-size: 15px;position: relative; top: 20px; width : 33%; color: darkred">When you look at the fixation cross, how does the ball appear to move?</h1>
-
-
-			<p style="position: relative; top: 150px"><strong>Double Ring</strong></a></p>
-			<p style="position: relative; top: 150px"><a href= "demo_sep.html">Separated</a></p>
-			<p style="position: relative; top: 150px"><a href= "demo_overlap.html">Overlapping</a></p>
-			<p style="position: relative; top: 150px"><a href= "demo_gapped.html">Gapped</a></p>
-
-			<!-- <p style="position: relative; top: 150px"><a href= "demo_rotating_sticks_sep.html"> <br>Sticks-sep</a></p>
-			<p style="position: relative; top: 150px"><a href= "demo_rotating_sticks_overlap.html">Sticks-overlap</a></p>
-			<p style="position: relative; top: 150px"><a href= "demo_rotating_sticks_gapped.html">Sticks-gapped</a></p> -->
+			<a href= "demo_rotating_balls_bar.html">Click to advance</a>
+			</p>
 
 			<br>
-			<p style="position: relative; top: 150px"><strong>Ball & Bar</strong></a></p>
-			<p style="position: relative; top: 150px"><br>Ball-no-bar</p>
-			<p style="position: relative; top: 150px"><a href= "demo_rotating_balls_bar.html">Ball-bar</a></p>
-
+			<p id = "below"><strong>Display 1 Double Ring: </strong></a>
+			<a href= "demo_sep.html">Separated</a>
+			<a href= "demo_overlap.html">Overlapping</a>
+			<a href= "demo_gapped.html">Gapped</a> 
+			<strong>|</strong> 
+			<a href= "demo_shadows.html">Shadows</a><br>
+		
+			
+			<strong>Display 2 Ball & Bar: </strong>
+			Ball without bar
+			<a href= "demo_rotating_balls_bar.html">Ball with bar</a> <strong>|</strong> 
+			<a href= "demo_rotating_balls_sv.html">Size Variation</a><br>
+		</p>
     </body>   
 </html>

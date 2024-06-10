@@ -1,38 +1,69 @@
 <!DOCTYPE html>
 <html>
     <head>
-		<title>Double Ring Illusion Demo</title>
+		<title>The double ring illusion</title>
+        <link rel="stylesheet" href="text.css"></link>
+		<meta charset="utf-8">
 
     </head>
-    <style>
-        #canvas {
-            z-index: 1; 
-            position:absolute; 
-            right:00%; 
-            top:00%;
-            margin-right:10px;
-            border: 2px solid black;
-        }
-		p {
-			font-family: verdana;
-			font-size: 13px;
-		}
-
-    </style>
     <body>
-		
 		<canvas id="canvas"></canvas>
+
+		<h1>Demo (2/3): The "double ring illusion": The physical constraint of solidity shapes visual processing<br><span class="output-browser"></span></h1>
+			
+		<p id="explanation">
+			<strong id = "title">Explanation</strong> <br>
+			Now most participants saw the rings move in <strong>stable 180° rotations</strong>, 
+			as if they are "avoiding" to pass through each other. <br>
+			<br>
+			In reality, the rings are the same as before, except that now they overlap. <br>
+			<br>
+			This suggests that our visual system uses the physical constraint of "solidity"
+			(i.e., objects cannot pass through each other) to interpret ambiguous object motions: When the stimuli are compatible 
+			with multiple interpretations, the visual system favors the interpretations respecting this physical constraint over those that violate it.<br>
+			<br>
+			<a href= "demo_gapped.html" style="float: right">Click to advance</a>
+		</p>
+
+
+		<p id = "below">
+			<a href= "demo_sep.html">Separated</a>
+			Overlapping
+			<a href= "demo_gapped.html">Gapped</a>
+			<br>
+			<a href= "../../index.html">Home</a>
+		</p>
+
+
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-BEKVWN8PCZ"></script>
+
 
     <script>
 
+
+window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-BEKVWN8PCZ');
+
+  
+// Detect browser
+var is_firefox = typeof InstallTrigger !== 'undefined';
+var isIE = /*@cc_on!@*/false || !!document.documentMode;
+
+if ((is_firefox || isIE)){
+	var browserOutput = "You are using Firefox or Internet Explorer, the stimuli might not be displayed correctly. Please use Chrome or Safari."
+	document.querySelector(".output-browser").textContent = browserOutput;
+}
 
 
 const r_ring 		 = 50,
 	pi 			 = Math.PI
 
 
-	canvas_width = window.innerWidth * 0.65,
-	canvas_height = window.innerHeight * 0.98;
+	canvas_width =500,
+	canvas_height = 500;
 
 // resize canvas
 function resize() {
@@ -92,8 +123,8 @@ display = function() {
 				if (maskFrameCounter/3 == Math.floor(maskFrameCounter/3)){
 					c.clearRect(0, 0, canvas.width, canvas.height);
 					
-					for (column = 16; column <= 34; column++ ) {
-						for (row = 20; row <= 30; row++ ) {
+					for (column = 12; column <= 38; column++ ) {
+						for (row = 19; row <= 31; row++ ) {
 							die = Math.random()
 							if (die < 0.5) {
 								c.fillRect((canvas_width/50) * column, (canvas_height/50)*row, canvas_width/50, canvas_height/50)
@@ -107,6 +138,7 @@ display = function() {
 			} else {
 				c.clearRect(0, 0, canvas.width, canvas.height);
 
+				c.strokeStyle = 'darkgreen'
 				c.lineWidth = 10;
 				// 2nd circle
 				drawCircle(c, canvas_width/2-25, canvas_height/2, this.width)
@@ -116,14 +148,15 @@ display = function() {
 				c.beginPath();
 				c.rect(canvas_width/2 - 10, canvas_height/2 - 2.5, 20, 5);
 				c.rect(canvas_width/2 - 2.5,  canvas_height/2 - 10, 5, 20);
-				c.fillStyle = 'blue';
+				c.fillStyle = 'black';
 				c.fill();
 				
 				// text
-				// c.font = '25px serif';
-				// c.fillStyle = "black";
-				// c.textAlign = "center"
-				// c.fillText('How do the rings move?', canvas_width/2, 200)
+				c.font = '15px verdana';
+				c.fillStyle = "black";
+				c.textAlign = "center"
+				c.fillText('How do the rings move when you look at the fixation cross?', canvas_width/2, 150)
+
 			}
 			
 		};
@@ -159,25 +192,5 @@ display = function() {
 display()
 
         </script>  
-			<h1 style="font-family:verdana; text-align:left; font-size: 21px;position: relative; top: 20px; width : 33%">Object solidity disambiguates ambiguous motion</h1>
-			<h2 style="font-family:verdana; text-align:left; font-size: 15px;position: relative; top: 20px; width : 33%">Dawei Bai & Brent Strickland</h1>
-			<br>
-			<h2 style="font-family:verdana; text-align:left; font-size: 15px;position: relative; top: 20px; width : 33%; color: darkred">When you look at the fixation cross, how do the rings appear to move?</h1>
-				
-
-			<p style="position: relative; top: 150px"><strong>Double Ring</strong></a></p>
-			<p style="position: relative; top: 150px"><a href= "demo_sep.html">Separated</a></p>
-			<p style="position: relative; top: 150px">Overlapping</p>
-			<p style="position: relative; top: 150px"><a href= "demo_gapped.html">Gapped</a></p>
-
-			<!-- <p style="position: relative; top: 150px"><a href= "demo_rotating_sticks_sep.html"> <br>Sticks-sep</a></p>
-			<p style="position: relative; top: 150px"><a href= "demo_rotating_sticks_overlap.html">Sticks-overlap</a></p>
-			<p style="position: relative; top: 150px"><a href= "demo_rotating_sticks_gapped.html">Sticks-gapped</a></p> -->
-			<br>
-			<p style="position: relative; top: 150px"><strong>Ball & Bar</strong></a></p>
-			<p style="position: relative; top: 150px"><a href= "demo_rotating_balls_nobar.html">Ball without bar</a></p>
-			<p style="position: relative; top: 150px"><a href= "demo_rotating_balls_bar.html">Ball with bar</a></p>
-		
-
     </body>   
 </html>
