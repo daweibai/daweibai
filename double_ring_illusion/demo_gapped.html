@@ -52,10 +52,12 @@ if ((is_firefox || isIE)){
 
 const r_ring 		 = 50,
 	pi 			 = Math.PI,
-
-
 	canvas_width = 500,
-	canvas_height = 500
+	canvas_height = 500;
+
+const fps = 60
+const msPerFrame = 1000 / fps
+
 
 // resize canvas
 function resize() {
@@ -182,14 +184,25 @@ display = function() {
 		t0 = performance.now()
 	}
 	
+	var timeThen = performance.now(),
+		timeNow
+
 	// Animation Loop
 	function animate() {
-		stopID = window.requestAnimationFrame(animate);
-
 		// c.clearRect(0, 0, canvas.width, canvas.height);
 		
-		for (let i = 0; i < ballArray.length; i++) {
-			ballArray[i].update();
+		stopID = window.requestAnimationFrame(animate);
+
+		// excute once every 17 ms (~60 frames per second)
+		timeNow = performance.now()
+
+		timePassed = timeNow - timeThen
+
+		if (timePassed > msPerFrame) {
+			timeThen = timeNow - (timePassed % msPerFrame);
+			for (let i = 0; i < ballArray.length; i++) {
+				ballArray[i].update();
+			}
 		}
 	}
 	
