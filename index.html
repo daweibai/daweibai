@@ -19,10 +19,16 @@
 <style>
     * {
         font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        word-break: break-word;
     }
 
     .textbox {
-        padding: 0 8%;
+        padding: 0 3%;
+    }
+    .outer-textbox {
+        padding: 0 4%;
+        background-color: rgba(255, 0, 0, 0.045);
+        background-clip: content-box, padding-box;
     }
 
     p {
@@ -44,15 +50,20 @@
 
     #me_michotte {
         display: block;
-        width: 40%; 
+        width: 550px; 
+        /* min-width: 300px; */
+        max-width: 100%;
+        /* width: 40%;  */
+        object-fit : cover ;      
         /* margin-left: auto;
         margin-right: auto;  */
     }
     
 </style>
-<body>   
+<div class="outer-textbox">
+        <body>   
     <div class="textbox">   
-    <h1>Hi, my name is Dawei Bai.</h1> 
+    <h1 style=" margin-top: 0px">Hi, my name is Dawei Bai.</h1> 
     <h2 class="intro">I am a postdoc at Yale University, where I work with <a href = "https://actcompthink.org/" target="_blank">Sam McDougle</a> and <a href = "https://perception.yale.edu/" target="_blank">Brian Scholl</a>.</h1>
     <h2 class="intro">I explore high-level representations (e.g., intuitive physics, social agency) in seemingly lower-level systems (e.g., vision, action). <br>I also explore (often surprising) connections between these systems and broader domains of human life, such as religion.</h1>
     
@@ -107,6 +118,7 @@
         So this website will look better once I have done more science!</i>)
     </p>
     <br>
+    </div>
     </div>
 </body>
 </html>
