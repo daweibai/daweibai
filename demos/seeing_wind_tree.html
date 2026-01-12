@@ -32,10 +32,10 @@
 const ctx = canvas.getContext("2d");
 
 // click function to reseed random tree
-// canvas.addEventListener("click",()=> {
-//       treeSeed = Math.random() * 10000 | 0;
-//       treeGrow = 0.1; // regrow tree
-// });
+canvas.addEventListener("click",()=> {
+      treeSeed = Math.random() * 10000 | 0;
+      treeGrow = 0.1; // regrow tree
+});
 
 
 /* Seeded random functions
@@ -83,7 +83,7 @@ const windStrength = 0.02 * bendability * ((200 ** 2) / (canvas.height ** 2));  
 const windBendRectSpeed = 0.005;  // how fast the tree reacts to the wing
 const windBranchSpring = 0.99;   // the amount and speed of the branch spring back
 
-const gustProbability = 5/100; // how often there is a gust of wind
+const gustProbability = 3/100; // how often there is a gust of wind
 
 // Values trying to have a gusty wind effect
 var windCycle = 0;
